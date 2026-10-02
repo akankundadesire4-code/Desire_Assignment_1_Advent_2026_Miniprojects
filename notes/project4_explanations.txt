@@ -1,0 +1,36 @@
+Mini-Project 4: Rainfall Pattern & Crop Suitability Analyser
+====================================================
+Plain-language notes for questions the assignment asks us to explain.
+
+1. Why was math.cos() the wrong tool for "cosine similarity" last year?
+   - math.cos(x) computes the trigonometric cosine of a single angle x (in
+     radians). It takes one number and returns one number.
+   - Cosine similarity compares two vectors (lists of numbers, like 12
+     months of rainfall) and tells you how similar their *shape* is,
+     ignoring their overall scale. The correct formula is:
+     cosine_similarity(a, b) = (a . b) / (|a| * |b|)
+     where "a . b" is the dot product and |a|, |b| are vector lengths
+     (norms). This is implemented in src/project4_rainfall.py and checked
+     against scipy.spatial.distance.cosine in the tests and notebook.
+
+2. Why can cosine similarity call two regions "similar" even if one is much
+   wetter?
+   - Cosine similarity only compares the *pattern* (relative shape) of the
+     12 monthly values, not their size. Two regions where one always gets
+     roughly twice as much rain as the other, but follows the same wet/dry
+     month pattern, will have a cosine similarity close to 1 (very
+     similar), even though their totals are very different.
+   - This is why the notebook also reports Euclidean distance (which does
+     care about scale) and Pearson correlation, so we do not rely on
+     cosine similarity alone.
+
+3. How do we detect rainy seasons and classify unimodal/bimodal regions?
+   - scipy.signal.find_peaks() scans the 12 monthly values and finds local
+     maxima ("peaks") that stand out from their neighbours by at least a
+     chosen "prominence" and are a minimum "distance" apart, so short
+     one-month wiggles are not counted as separate seasons.
+   - A region with one detected peak is classified "unimodal" (one rainy
+     season); a region with two is classified "bimodal" (two rainy
+     seasons). We compare this to Uganda's known climate zones: areas near
+     the Lake Victoria basin are typically bimodal (two rainy seasons),
+     while parts of northern Uganda are typically closer to unimodal.

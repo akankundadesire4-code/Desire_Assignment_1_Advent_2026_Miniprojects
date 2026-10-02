@@ -1,0 +1,49 @@
+Mini-Project 1: UBOS District Population Forecaster
+====================================================
+Plain-language notes for questions the assignment asks us to explain.
+
+1. Why do statistics.variance and np.var give different numbers?
+   - statistics.variance() always divides by (n - 1). This is called the
+     "sample variance". It is used when your data is a SAMPLE from a bigger
+     population and you want an unbiased estimate.
+   - np.var() by default divides by n (the "population variance"), because
+     NumPy assumes you already have the whole population.
+   - The ddof argument (delta degrees of freedom) controls this. np.var(x)
+     uses ddof=0 (divide by n). np.var(x, ddof=1) divides by (n - 1), which
+     matches statistics.variance() exactly.
+   - In this project we treat the 10 years of data as a sample, so ddof=1
+     is the fair comparison to statistics.variance().
+
+2. Which district is growing fastest in relative terms?
+   - We answer this using CAGR (Compound Annual Growth Rate), not the raw
+     year-on-year percentage changes, because CAGR smooths out yearly noise
+     and gives one single "average yearly growth rate" for the whole period.
+   - The district with the highest CAGR value is the fastest-growing in
+     relative (percentage) terms, even if another district added more
+     people in absolute (thousands) terms. See the notebook's printed CAGR
+     table for the exact ranking with this specific data.
+
+3. What does comparing forecast variance to actual variance tell us?
+   - If the forecast variance is much smaller than the actual variance, our
+     model is producing an overly smooth, "safe" forecast that may
+     understate real year-to-year swings.
+   - If the forecast variance is much larger, the model may be
+     over-reacting to short-term noise in the training data.
+   - Because our simple models (straight line, constant growth rate) are
+     smooth by construction, we generally expect forecast variance to be
+     lower than the actual historical variance. This is a limitation, not
+     a sign of a "better" forecast.
+
+4. Is the Fibonacci-ratio model defensible?
+   - The Fibonacci-ratio model scales the last known value by the ratio of
+     consecutive Fibonacci numbers (which converges towards the golden
+     ratio, about 1.618, for large Fibonacci numbers, and is close to 1 for
+     the smaller pairs).
+   - It is not based on any real cause of population change (births,
+     deaths, migration). It only "looks reasonable" because Fibonacci
+     ratios happen to shrink and settle down, similar to how real growth
+     rates often slow over time.
+   - It could only be defended as a rough numerical curiosity for
+     short-horizon forecasts, never as a real demographic model. Our test
+     results (MAE/RMSE/MAPE) show whether it happens to fit this specific
+     dataset better or worse than the linear and CAGR models.

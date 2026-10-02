@@ -1,0 +1,35 @@
+Mini-Project 5: Taxi Route Revenue, Pricing & Fleet Planner
+====================================================
+Plain-language notes for questions the assignment asks us to explain.
+
+1. Is the current UGX 2,000 Ntinda fare above or below equilibrium?
+   - We modelled demand as Qd = 120 - 0.02P and supply as Qs = 10 + 0.03P.
+   - At equilibrium, Qd = Qs, so we solve the 2x2 linear system
+     0.02P + Q = 120 and -0.03P + Q = 10 (rearranged) with
+     scipy.linalg.solve to find the equilibrium price P* and quantity Q*.
+   - Compare the notebook's calculated P* to the current UGX 2,000 fare. If
+     2,000 is below P*, the fare is set below market equilibrium (this can
+     mean more demand than supply at that price, i.e. it may be
+     under-priced for the route). If it is above P*, the fare may be
+     discouraging some riders relative to what the market would otherwise
+     support. See the notebook for the specific number with this data.
+
+2. Why do we use walk-forward (rolling-origin) backtesting instead of a
+   single train/test split?
+   - Walk-forward backtesting re-fits (or re-applies) each forecaster at
+     every day from day 4 to day 10, always using only the data available
+     up to that point, then checks the very next day's real value.
+   - This mimics how the forecast would really be used in production (one
+     day at a time, never seeing the future), so it gives a fairer,
+     less lucky/unlucky estimate of each model's typical error (MAE) than
+     one single fixed split would.
+
+3. How is the day-11 fleet size calculated?
+   - Each vehicle can carry 14 passengers per trip and makes 8 one-way
+     trips a day, giving a capacity of 8 * 14 = 112 passengers per vehicle
+     per day.
+   - We take the best model's forecast passenger count for day 11, add a
+     15% safety buffer (to avoid under-supplying the route), divide by 112,
+     and round up (ceiling), since you cannot deploy a fraction of a
+     vehicle. This is implemented in vehicles_needed() in
+     src/project5_taxi.py.

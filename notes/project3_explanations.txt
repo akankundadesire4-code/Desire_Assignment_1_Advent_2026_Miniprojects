@@ -1,0 +1,34 @@
+Mini-Project 3: Lake Victoria Fish Stock & Export Risk Model
+====================================================
+Plain-language notes for questions the assignment asks us to explain.
+
+1. Why is unbounded Fibonacci growth biologically unrealistic?
+   - Fibonacci numbers grow without any limit - each number keeps getting
+     bigger forever, following a fixed mathematical rule.
+   - Real fish stocks live in a lake with limited food, space and oxygen.
+     A real population cannot grow forever; it must slow down and level
+     off near some maximum the environment can support (its "carrying
+     capacity"). Fibonacci numbers have no concept of this limit, so using
+     them to model "stock" ignores basic biology and would predict an
+     impossible, ever-growing fish population.
+   - The logistic growth model we use instead includes a carrying capacity
+     K, so growth naturally slows down as the stock approaches K.
+
+2. Why is a raw variance threshold like 50,000 meaningless here?
+   - Variance is measured in squared units. If revenue is in UGX, then the
+     variance of revenue is in UGX-squared, not UGX. A number like 50,000
+     UGX-squared has no natural real-world interpretation, and it cannot be
+     compared across datasets with different units or scales.
+   - The coefficient of variation (CV = standard deviation / mean) has no
+     units at all - it is just a ratio - so it can be sensibly compared
+     across different revenue scales and used to set a fair risk threshold
+     ("high risk if CV > 0.35", for example), unlike a raw variance cutoff.
+
+3. How does our harvest rate compare to the Maximum Sustainable Yield (MSY)?
+   - The theoretical MSY for the logistic model is MSY = r * K / 4.
+   - The notebook compares total revenue and final stock for harvest rates
+     h = 0.05, 0.10, 0.20 and 0.30 against this MSY figure. Harvest rates
+     that take the stock well below half of K for long periods, or push
+     final stock towards zero, are not sustainable even if they produce
+     high revenue in the short term - see the notebook's scenario table for
+     the exact comparison with this data.

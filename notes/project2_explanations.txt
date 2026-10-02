@@ -1,0 +1,39 @@
+Mini-Project 2: Solar Micro-Grid Dispatch Planner
+====================================================
+Plain-language notes for questions the assignment asks us to explain.
+
+1. What do the determinant and condition number mean for this system?
+   - Our system is: 3x + 2y = D1 and 4x + y = D2.
+   - The determinant of the coefficient matrix [[3, 2], [4, 1]] is
+     (3 * 1) - (2 * 4) = -5. Because this is not zero, the system always
+     has exactly one solution for any demand values D1 and D2 - it is
+     "well-posed".
+   - The condition number tells us how sensitive the solution (x, y) is to
+     small errors or noise in D1 and D2. A small condition number (close to
+     1) means small input errors stay small in the output. A large
+     condition number means small input errors can be greatly amplified.
+     For this specific matrix the condition number is modest, so our
+     solved solar/battery values are reasonably stable day to day.
+
+2. Why does the vectorised solve differ in speed from the loop?
+   - The Python loop calls scipy.linalg.solve() once per day, so it repeats
+     Python-level overhead (function calls, temporary arrays) 30 times.
+   - The vectorised call solves all 30 days in a single call by passing a
+     2x30 right-hand-side matrix. SciPy/LAPACK can process the whole batch
+     with far less repeated overhead, so it is faster, and the speed gap
+     grows if we had many more days.
+
+3. Why can a day be "physically infeasible"?
+   - Solving the exact linear system can mathematically require a negative
+     amount of solar or battery energy on some days, which is impossible in
+     real life (you cannot supply negative energy).
+   - We handle this using scipy.optimize.nnls (non-negative least squares),
+     which finds the closest possible non-negative (x, y) that best matches
+     the demand equations, instead of an exact but impossible answer.
+
+4. Which source is more volatile, solar or battery usage?
+   - We answer this with the standard deviation and variance from the
+     'statistics' module across the 30 simulated days. Compare the printed
+     values in the notebook: whichever source has the larger standard
+     deviation relative to its own average is the more volatile one for
+     this dataset.

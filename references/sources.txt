@@ -1,0 +1,36 @@
+Sources cited in this repository
+=================================
+
+1. NASA POWER (Prediction of Worldwide Energy Resources) API
+   - Parameter: PRECTOTCORR (precipitation corrected), monthly, mm/day, converted to
+     monthly totals by multiplying by the number of days in each month.
+   - Community: AG (agroclimatology)
+   - Coordinates used:
+       Kampala: lat 0.3476, lon 32.5825
+       Gulu:    lat 2.7746, lon 32.2989
+       Mbarara: lat -0.6072, lon 30.6545
+   - Period retrieved: 2015-01 to 2024-12
+   - Retrieved: 2026-09-30
+   - Endpoint pattern:
+     https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=PRECTOTCORR&community=AG&longitude=<lon>&latitude=<lat>&start=2015&end=2024&format=JSON
+   - Saved as: data/rainfall_nasa_power_2015_2024.csv
+   - Note: this is satellite/reanalysis (MERRA-2 model) data, not a ground station
+     reading, so it may differ from official UNMA station records.
+
+2. Crop rainfall suitability ranges (illustrative thresholds, informed by general
+   FAO crop-water-need guidance for maize, beans and coffee in East Africa, roughly
+   1000-1600 mm/year total for maize/beans and 1500-2200 mm/year for coffee,
+   divided down to simplified per-month bands since this project classifies
+   rainfall month by month, not by annual total):
+   - Maize:  60-180 mm/month suitable range used in this project.
+   - Beans:  60-150 mm/month suitable range used in this project.
+   - Coffee: 100-250 mm/month suitable range used in this project.
+   Source: FAO Crop Water Information (fao.org/land-water/databases-and-software/
+   crop-information) - general guidance, adapted to monthly bands for this
+   student assignment. These are simplified, illustrative thresholds, not an
+   official Ugandan agricultural extension recommendation.
+
+3. All other data in this repository (population, micro-grid demand, fish stock,
+   taxi passenger counts) is the illustrative data supplied in the assignment
+   brief, or synthetic data generated with a fixed random seed as described in
+   each notebook.
